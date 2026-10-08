@@ -1,0 +1,38 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: knowledge-agent
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  ai:
+    # "openai" here is the Spring AI client adapter. The backend is GitHub Models.
+    # Disable unused OpenAI-shaped models so the app boots without a token.
+    model:
+      chat: ${KNOWLEDGE_CHAT_MODEL:none}
+      embedding: none
+      image: none
+      moderation: none
+      audio:
+        speech: none
+        transcription: none
+    openai:
+      api-key: ${GITHUB_TOKEN:}
+      base-url: ${GITHUB_MODELS_BASE_URL:https://models.github.ai/inference}
+      chat:
+        completions-path: ${GITHUB_MODELS_CHAT_PATH:/chat/completions}
+        options:
+          model: ${GITHUB_MODELS_MODEL:openai/gpt-4o-mini}
+          temperature: 0.2
+
+knowledge:
+  sample-dir: ${KNOWLEDGE_SAMPLE_DIR:sample-data}
+  output-dir: ${KNOWLEDGE_OUTPUT_DIR:output}
+  generate-on-startup: ${KNOWLEDGE_GENERATE_ON_STARTUP:false}
+  llm:
+    enabled: ${KNOWLEDGE_LLM_ENABLED:false}
+    model: ${GITHUB_MODELS_MODEL:openai/gpt-4o-mini}
+    provider: github-models
