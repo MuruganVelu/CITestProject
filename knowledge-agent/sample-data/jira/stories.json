@@ -1,0 +1,184 @@
+{
+  "issues": [
+    {
+      "key": "IB-101",
+      "fields": {
+        "summary": "Retail customer login with user ID and password",
+        "description": "Customers sign in to internet banking with a unique user ID and password. Successful authentication lands on the account summary. Failed attempts must not disclose whether the user ID exists.",
+        "acceptanceCriteria": "- Valid credentials open the account summary\n- Invalid credentials show a generic error\n- Password field is masked"
+      },
+      "relatedTests": ["TC-01", "TC-02"]
+    },
+    {
+      "key": "IB-102",
+      "fields": {
+        "summary": "Step-up MFA with SMS OTP on login from a new device",
+        "description": "After password validation, a new or untrusted device requires a 6-digit SMS OTP. Trusted devices skip OTP for 90 days unless the customer revokes them.",
+        "acceptanceCriteria": "- OTP is required on first login from a new browser\n- Expired or wrong OTP is rejected without completing login\n- Successful OTP marks the device as trusted"
+      },
+      "relatedTests": ["TC-04", "TC-05", "TC-06", "TC-09"]
+    },
+    {
+      "key": "IB-103",
+      "fields": {
+        "summary": "Idle session timeout and explicit logout",
+        "description": "Internet banking sessions expire after 10 minutes of inactivity. Customers can also logout from the header. Both paths invalidate the server session and require a fresh login.",
+        "acceptanceCriteria": "- Idle timeout returns the customer to login with a session-expired message\n- Logout clears cookies and blocks Back-button reuse of cached pages"
+      },
+      "relatedTests": ["TC-07", "TC-08"]
+    },
+    {
+      "key": "IB-104",
+      "fields": {
+        "summary": "Account summary dashboard",
+        "description": "After login the customer sees every eligible retail account: product type, masked account number, available balance, and product nickname. A hide-balance control is available for shoulder-surfing protection.",
+        "acceptanceCriteria": "- All active CASA and term-deposit accounts appear\n- Available balance matches the core banking snapshot used by the channel\n- Hide/show balance toggles amounts without a page reload error"
+      },
+      "relatedTests": ["TC-11", "TC-12", "TC-13", "TC-15"]
+    },
+    {
+      "key": "IB-105",
+      "fields": {
+        "summary": "Account details and recent transactions",
+        "description": "From summary the customer opens an account to see ledger-style recent transactions, holds, and joint-account indicators.",
+        "acceptanceCriteria": "- Last 10 transactions display with date, description, debit/credit, running balance\n- Joint accounts show a joint indicator\n- Pending authorizations are labelled"
+      },
+      "relatedTests": ["TC-14", "TC-16"]
+    },
+    {
+      "key": "IB-106",
+      "fields": {
+        "summary": "Own-account funds transfer",
+        "description": "Customers move money between their own savings and current accounts in real time. A confirmation step shows from, to, amount, and remarks before submit.",
+        "acceptanceCriteria": "- Transfer posts to both accounts immediately when within limits and funds\n- Confirmation screen is mandatory\n- Receipt shows a channel reference number"
+      },
+      "relatedTests": ["TC-17", "TC-22"]
+    },
+    {
+      "key": "IB-107",
+      "fields": {
+        "summary": "Transfer to an approved beneficiary (IMPS/NEFT)",
+        "description": "Customers send funds to an active beneficiary using IMPS (low value, immediate) or NEFT (batch). High-value payments require OTP.",
+        "acceptanceCriteria": "- Only active beneficiaries appear as destinations\n- IMPS succeeds within the IMPS cap\n- High-value transfer prompts OTP before commit"
+      },
+      "relatedTests": ["TC-18", "TC-23"]
+    },
+    {
+      "key": "IB-108",
+      "fields": {
+        "summary": "Per-transaction and daily transfer limits",
+        "description": "The channel enforces bank-max and customer-set daily and per-transaction limits for third-party transfers. Own-account transfers use a higher internal cap.",
+        "acceptanceCriteria": "- Breach of per-transaction limit is blocked before OTP\n- Breach of remaining daily limit is blocked\n- Customer can view remaining limit for the day"
+      },
+      "relatedTests": ["TC-20", "TC-21", "TC-46", "TC-47", "TC-48"]
+    },
+    {
+      "key": "IB-109",
+      "fields": {
+        "summary": "Pay a registered biller",
+        "description": "Customers pay utilities and card bills from a registered biller list. Where the biller supports fetch, the outstanding amount is retrieved before pay.",
+        "acceptanceCriteria": "- Pay succeeds against a registered biller with a valid amount\n- Fetch-and-pay uses the fetched outstanding as the default amount\n- Receipt includes biller name and consumer number"
+      },
+      "relatedTests": ["TC-26", "TC-29", "TC-30"]
+    },
+    {
+      "key": "IB-110",
+      "fields": {
+        "summary": "Register a new biller",
+        "description": "Customers add a biller by category, biller name, and consumer number. Invalid consumer numbers returned by the biller network are rejected.",
+        "acceptanceCriteria": "- Valid consumer number creates an active biller\n- Invalid consumer number shows a biller-network error and does not save"
+      },
+      "relatedTests": ["TC-27", "TC-28"]
+    },
+    {
+      "key": "IB-111",
+      "fields": {
+        "summary": "Manage transfer beneficiaries with cool-off",
+        "description": "New beneficiaries require a cooling-off period (4 hours) before they can receive funds. Duplicate account numbers for the same customer are rejected. Nickname edits do not reset cool-off.",
+        "acceptanceCriteria": "- Add beneficiary succeeds and status is Cooling-off until the period ends\n- Transfer is blocked during cool-off\n- Duplicate account number is rejected\n- Delete removes the beneficiary from the payee list"
+      },
+      "relatedTests": ["TC-31", "TC-32", "TC-33", "TC-34", "TC-35"]
+    },
+    {
+      "key": "IB-112",
+      "fields": {
+        "summary": "Account statements view, download, and email",
+        "description": "Customers view up to 12 months of statements, download PDF or CSV, and email a statement to the registered address. Date ranges must be valid and within the retention window.",
+        "acceptanceCriteria": "- Default view is last 30 days of posted transactions\n- PDF and CSV downloads succeed for a valid range\n- End date before start date is rejected\n- Email statement is sent to the registered email only"
+      },
+      "relatedTests": ["TC-36", "TC-37", "TC-38", "TC-39", "TC-40"]
+    },
+    {
+      "key": "IB-113",
+      "fields": {
+        "summary": "View debit and credit cards linked to the customer",
+        "description": "The cards hub lists debit and credit cards with masked PAN, product name, status, and linked account.",
+        "acceptanceCriteria": "- All active and blocked cards for the CIF are listed\n- PAN is masked except last 4"
+      },
+      "relatedTests": ["TC-41"]
+    },
+    {
+      "key": "IB-114",
+      "fields": {
+        "summary": "Card controls: block, unblock, PIN set, international usage",
+        "description": "Customers can temporarily block a debit card, unblock it, set/reset PIN via OTP, and toggle international usage.",
+        "acceptanceCriteria": "- Block changes status to Blocked and declines subsequent POS in the simulator\n- Unblock restores Active\n- PIN set requires OTP\n- International toggle persists"
+      },
+      "relatedTests": ["TC-42", "TC-43", "TC-44", "TC-45"]
+    },
+    {
+      "key": "IB-115",
+      "fields": {
+        "summary": "Customer-managed channel limits",
+        "description": "Within the bank maximum, customers raise or lower daily third-party transfer limits. Changes above the current limit may require OTP.",
+        "acceptanceCriteria": "- View shows bank max, current daily limit, remaining today\n- Update within max succeeds\n- Update above bank max is rejected"
+      },
+      "relatedTests": ["TC-46", "TC-47", "TC-48"]
+    },
+    {
+      "key": "IB-116",
+      "fields": {
+        "summary": "Transaction and login alerts",
+        "description": "Customers opt in or out of SMS and email alerts for debits, credits, and successful logins.",
+        "acceptanceCriteria": "- Enable SMS debit alerts persists and is shown as On\n- Disable email login alerts persists\n- Preferences survive logout"
+      },
+      "relatedTests": ["TC-49", "TC-50"]
+    },
+    {
+      "key": "IB-117",
+      "fields": {
+        "summary": "Lock internet banking after repeated failed logins",
+        "description": "Three consecutive invalid password attempts lock the user ID for 30 minutes or until the customer unlocks via the contact centre / forgot-password flow.",
+        "acceptanceCriteria": "- Third consecutive failure locks the ID\n- A fourth attempt with the correct password is still rejected while locked\n- Generic lock message does not confirm the password was correct"
+      },
+      "relatedTests": ["TC-03"]
+    },
+    {
+      "key": "IB-118",
+      "fields": {
+        "summary": "Insufficient funds and duplicate-transfer protection",
+        "description": "Transfers and bill payments that exceed available balance are blocked. A second submit of the same amount/beneficiary within two minutes warns of a possible duplicate.",
+        "acceptanceCriteria": "- Amount greater than available balance is rejected with insufficient-funds\n- Duplicate warning is shown; customer can cancel or confirm"
+      },
+      "relatedTests": ["TC-19", "TC-25"]
+    },
+    {
+      "key": "IB-119",
+      "fields": {
+        "summary": "Self-service password reset",
+        "description": "Customers reset a forgotten password using registered mobile OTP and a debit-card PIN or security questions, then set a new password that meets complexity rules.",
+        "acceptanceCriteria": "- OTP to registered mobile is required\n- New password meeting policy is accepted and old password cannot be reused immediately\n- After reset the customer can login with the new password"
+      },
+      "relatedTests": ["TC-10"]
+    },
+    {
+      "key": "IB-120",
+      "fields": {
+        "summary": "Future-dated own and beneficiary transfers",
+        "description": "Customers may schedule a one-time transfer for a future business date. The debit occurs on that date if funds and limits allow; otherwise the schedule fails and an alert is sent.",
+        "acceptanceCriteria": "- Future date is accepted for the next 30 days excluding today\n- Scheduled instruction appears in the activity list as Pending"
+      },
+      "relatedTests": ["TC-24"]
+    }
+  ]
+}

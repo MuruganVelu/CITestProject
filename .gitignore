@@ -1,0 +1,7 @@
+.idea/
+*.iml
+.DS_Store
+knowledge-agent/target/
+knowledge-agent/output/
+MavenAutoTest/target/
+MavenAutoTest/test-output/

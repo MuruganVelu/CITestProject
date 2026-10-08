@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Knowledge agent — induction generator</title>
+  <style>
+    body { font-family: sans-serif; max-width: 720px; margin: 2rem auto; line-height: 1.4; }
+    label { display: block; margin: 1rem 0 0.3rem; font-weight: 600; }
+    button { margin-top: 1rem; padding: 0.5rem 1rem; }
+    pre { background: #f4f4f4; padding: 1rem; overflow: auto; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Internet banking induction generator</h1>
+  <p>Upload a Jira stories export and a regression-master file. The agent links them and writes Markdown onboarding docs. Sample internet-banking files are loaded at startup if you skip upload.</p>
+  <form id="form">
+    <label for="jiraStories">Jira stories (JSON / CSV / Markdown)</label>
+    <input id="jiraStories" name="jiraStories" type="file" required>
+    <label for="regressionTests">Regression master (CSV / JSON / Markdown)</label>
+    <input id="regressionTests" name="regressionTests" type="file" required>
+    <button type="submit">Ingest and generate</button>
+  </form>
+  <p><button type="button" id="generateOnly">Generate from already ingested corpus</button></p>
+  <pre id="out">Ready.</pre>
+  <script>
+    const out = document.getElementById('out');
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      out.textContent = 'Uploading…';
+      const ingest = await fetch('/api/ingest', { method: 'POST', body: data });
+      const ingestJson = await ingest.json();
+      if (!ingest.ok) { out.textContent = JSON.stringify(ingestJson, null, 2); return; }
+      await generate();
+    });
+    document.getElementById('generateOnly').addEventListener('click', generate);
+    async function generate() {
+      out.textContent = 'Generating…';
+      const res = await fetch('/api/induction', { method: 'POST' });
+      const json = await res.json();
+      out.textContent = json.markdown || JSON.stringify(json, null, 2);
+    }
+  </script>
+</body>
+</html>
