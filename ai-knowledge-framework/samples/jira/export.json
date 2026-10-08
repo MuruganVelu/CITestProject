@@ -1,0 +1,22 @@
+{
+  "issues": [
+    {
+      "key": "APP-101",
+      "fields": {
+        "summary": "User can sign in with corporate SSO",
+        "description": "As a user, I authenticate via SSO and land on the dashboard.\nAcceptance: successful login, session timeout after 30 min.",
+        "issuetype": { "name": "Story" },
+        "status": { "name": "Done" }
+      }
+    },
+    {
+      "key": "APP-205",
+      "fields": {
+        "summary": "Export monthly transaction report",
+        "description": "Finance users export CSV for reconciliation.",
+        "issuetype": { "name": "Story" },
+        "status": { "name": "In Progress" }
+      }
+    }
+  ]
+}

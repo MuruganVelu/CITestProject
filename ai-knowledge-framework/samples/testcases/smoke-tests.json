@@ -1,0 +1,8 @@
+[
+  {
+    "name": "login_smoke",
+    "jiraKey": "APP-101",
+    "steps": ["Open login URL", "Complete SSO", "Assert dashboard visible"],
+    "framework": "TestNG + Selenium"
+  }
+]
